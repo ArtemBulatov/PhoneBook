@@ -14,6 +14,6 @@
 * GET /users/{id}/phonebook/{contactId} - получение контакта по его id (contactId) из телефонной книжки пользователя с указанным id. Возвращает файл json и статус OK или же статус NOT_FOUND.
 * PUT /users/{id}/phonebook/{contactId} (в теле запроса должно быть поля "name" и "phoneNumber") - редактирование контакта по его id (contactId) из телефонной книжки пользователя с указанным id. Возвращает статус OK или же статус NOT_MODIFIED.
 * DELETE /users/{id}/phonebook/{contactId} - удаление контакта по его id. Возвращает статус OK или NOT_MODIFIED.
-* GET /users/{id}/phonebook/find/{phoneNumber} - поиск контакта по номеру телефона (то есть на месте {phoneNumber} в запросе указывается номер телефона искомого контакта).
+* GET /users/{id}/phonebook/find/{phoneNumber} - поиск контакта по номеру телефона (то есть на месте {phoneNumber} в запросе указывается номер телефона искомого контакта). Возвращает файл json и статус OK или же статус NOT_FOUND.
 
 
