@@ -1,43 +1,59 @@
 package ru.bulatov.phonebook.service;
 
+import org.springframework.stereotype.Service;
 import ru.bulatov.phonebook.models.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public interface UserService {
+@Service
+public class UserService {
 
-    /**
-     * Создает нового пользователя
-     * @param user - пользователь для создания
-     */
-    void create(User user);
+    private static final Map<Integer, User> USER_MAP = new HashMap<>();
 
-    /**
-     * Возвращает список всех имеющихся пользователей
-     * @return список пользователей
-     */
-    List<User> readAll();
+    private static final AtomicInteger USER_ID_HOLDER = new AtomicInteger();
 
-    /**
-     * Возвращает пользователя по его ID
-     * @param id - ID пользователя
-     * @return - объект пользователя с заданным ID
-     */
-    User read(int id);
+    public void create(User user){
+        int userId = USER_ID_HOLDER.incrementAndGet();
+        user.setId(userId);
+        USER_MAP.put(userId, user);
+    }
 
-    /**
-     * Обновляет пользователя с заданным ID,
-     * в соответствии с переданным пользователем
-     * @param user - пользователь в соответсвии с которым нужно обновить данные
-     * @param id - id пользователя которого нужно обновить
-     * @return - true если данные были обновлены, иначе false
-     */
-    boolean update(int id, User user);
+    public List<User> readAll() {
+        return new ArrayList<>(USER_MAP.values());
+    }
 
-    /**
-     * Удаляет пользователя с заданным ID
-     * @param id - id пользователя, которого нужно удалить
-     * @return - true если пользователя был удален, иначе false
-     */
-    boolean delete(int id);
+    public User read(int id) {
+        return USER_MAP.get(id);
+    }
+
+    public boolean update(int id, User updatedUser) {
+        if (USER_MAP.containsKey(id)) {
+            User userToBeUpdated = USER_MAP.get(id);
+            userToBeUpdated.setName(updatedUser.getName());
+            return true;
+        }
+        return  false;
+    }
+
+    public boolean delete(int id) {
+        return USER_MAP.remove(id) != null;
+    }
+
+    public User find(String name) {
+        return USER_MAP.values().stream()
+                .filter(user -> user.getName().equals(name))
+                .findAny().orElse(null);
+    }
+
+    public User getUserById(int id){
+
+        return USER_MAP.values().stream()
+                .filter(user -> user.getId() == id)
+                .findAny().orElse(null);
+    }
+
 }

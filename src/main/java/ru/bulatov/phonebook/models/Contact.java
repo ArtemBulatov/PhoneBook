@@ -1,6 +1,7 @@
 package ru.bulatov.phonebook.models;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -9,11 +10,14 @@ public class Contact {
     private int id;
 
     @NotEmpty(message = "Name of contact should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
+    @Pattern(regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+')?[A-Z][a-z]*)))*$",
+            message = "Bad formed person name: ${validatedValue}")
     private String name;
 
     @NotEmpty(message = "PhoneNumber should not be empty")
-    @Size(min = 2, max = 30, message = "PhoneNumber should be between 2 and 30 characters")
+    @Pattern(regexp = "^(\\s*)?(\\+)?([- _():=+]?\\d[- _():=+]?){10,14}(\\s*)?$",
+            message = "Bad formed phoneNumber: ${validatedValue}")
     private String phoneNumber;
 
     public int getId() {

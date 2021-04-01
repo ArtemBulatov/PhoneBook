@@ -3,37 +3,37 @@ package ru.bulatov.phonebook.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.bulatov.phonebook.models.Contact;
 import ru.bulatov.phonebook.models.User;
 import ru.bulatov.phonebook.service.PhoneBookService;
-import ru.bulatov.phonebook.service.UserServiceImpl;
+import ru.bulatov.phonebook.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class MainController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     private final PhoneBookService phoneBookService;
 
     @Autowired
-    public UserController(UserServiceImpl userServiceImpl, PhoneBookService phoneBookService) {
-        this.userServiceImpl = userServiceImpl;
+    public MainController(UserService userService, PhoneBookService phoneBookService) {
+        this.userService = userService;
         this.phoneBookService = phoneBookService;
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        userServiceImpl.create(user);
+    public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
+        userService.create(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<User>> readAllUsers() {
-        List<User> users = userServiceImpl.readAll();
+        List<User> users = userService.readAll();
 
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(users, HttpStatus.OK)
@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> readUser(@PathVariable("id") int id) {
-        User user = userServiceImpl.read(id);
+        User user = userService.read(id);
 
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
@@ -50,8 +50,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody User user) {
-        boolean updated = userServiceImpl.update(id, user);
+    public ResponseEntity<?> updateUser(@PathVariable("id") int id,
+                                        @RequestBody @Valid User user) {
+        boolean updated = userService.update(id, user);
 
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -60,7 +61,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
-        boolean deleted = userServiceImpl.delete(id);
+        boolean deleted = userService.delete(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -69,7 +70,7 @@ public class UserController {
 
     @GetMapping("/find/{name}")
     public ResponseEntity<User> findUser(@PathVariable("name") String name) {
-        User foundUser = userServiceImpl.find(name);
+        User foundUser = userService.find(name);
 
         return foundUser != null
                 ? new ResponseEntity<>(foundUser, HttpStatus.OK)
@@ -77,14 +78,15 @@ public class UserController {
     }
 
     @PostMapping("/{id}/phonebook")
-    public ResponseEntity<?> createContact(@PathVariable("id") int id, @RequestBody Contact contact) {
-        phoneBookService.addContact(userServiceImpl.getUserById(id), contact);
+    public ResponseEntity<?> createContact(@PathVariable("id") int id,
+                                           @RequestBody @Valid Contact contact) {
+        phoneBookService.addContact(userService.getUserById(id), contact);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/phonebook")
     public ResponseEntity<List<Contact>> readAllContacts(@PathVariable("id") int id) {
-        List<Contact> contacts = phoneBookService.getAllContacts(userServiceImpl.getUserById(id));
+        List<Contact> contacts = phoneBookService.getAllContacts(userService.getUserById(id));
 
         return contacts != null && !contacts.isEmpty()
                 ? new ResponseEntity<>(contacts, HttpStatus.OK)
@@ -94,7 +96,7 @@ public class UserController {
     @GetMapping("/{id}/phonebook/{contactId}")
     public ResponseEntity<Contact> readContact(@PathVariable("id") int id,
                                             @PathVariable("contactId") int contactId) {
-        Contact contact = phoneBookService.readContact(userServiceImpl.getUserById(id), contactId);
+        Contact contact = phoneBookService.readContact(userService.getUserById(id), contactId);
         return contact != null
                 ? new ResponseEntity<>(contact, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -103,9 +105,9 @@ public class UserController {
     @PutMapping("/{id}/phonebook/{contactId}")
     public ResponseEntity<?> updateContact(@PathVariable("id") int id,
                                         @PathVariable("contactId") int contactId,
-                                        @RequestBody Contact contact) {
+                                        @RequestBody @Valid Contact contact) {
         contact.setId(contactId);
-        boolean updated = phoneBookService.updateContact(userServiceImpl.getUserById(id), contact);
+        boolean updated = phoneBookService.updateContact(userService.getUserById(id), contact);
 
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -115,7 +117,7 @@ public class UserController {
     @DeleteMapping("/{id}/phonebook/{contactId}")
     public ResponseEntity<?> deleteContact(@PathVariable("id") int id,
                                            @PathVariable("contactId") int contactId) {
-        boolean deleted = phoneBookService.deleteContact(userServiceImpl.getUserById(id), contactId);
+        boolean deleted = phoneBookService.deleteContact(userService.getUserById(id), contactId);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -125,7 +127,7 @@ public class UserController {
     @GetMapping("/{id}/phonebook/find/{phoneNumber}")
     public ResponseEntity<Contact> findContact(@PathVariable("id") int id,
                                                @PathVariable("phoneNumber") String phoneNumber) {
-        User user = userServiceImpl.read(id);
+        User user = userService.read(id);
         Contact contact = phoneBookService.findContact(user, phoneNumber);
         return contact != null
                 ? new ResponseEntity<>(contact, HttpStatus.OK)
