@@ -16,4 +16,3 @@
 * DELETE /users/{id}/phonebook/{contactId} - удаление контакта по его id. Возвращает статус 200 "OK" или 304 "NOT_MODIFIED".
 * GET /users/{id}/phonebook/find/{phoneNumber} - поиск контакта по номеру телефона (то есть на месте {phoneNumber} в запросе указывается номер телефона искомого контакта). Возвращает файл json и статус 200 "OK" или же статус 404 "NOT_FOUND".
 
-
