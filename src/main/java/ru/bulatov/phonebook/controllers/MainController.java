@@ -14,13 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class MainController {
+public class UserController {
 
     private final UserService userService;
     private final PhoneBookService phoneBookService;
 
     @Autowired
-    public MainController(UserService userService, PhoneBookService phoneBookService) {
+    public UserController(UserService userService, PhoneBookService phoneBookService) {
         this.userService = userService;
         this.phoneBookService = phoneBookService;
     }
