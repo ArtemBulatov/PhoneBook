@@ -49,11 +49,4 @@ public class UserService {
                 .findAny().orElse(null);
     }
 
-    public User getUserById(int id){
-
-        return USER_MAP.values().stream()
-                .filter(user -> user.getId() == id)
-                .findAny().orElse(null);
-    }
-
 }

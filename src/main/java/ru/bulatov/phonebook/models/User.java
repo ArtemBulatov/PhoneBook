@@ -1,11 +1,13 @@
 package ru.bulatov.phonebook.models;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class User {
 
+    @NotNull
     private int id;
 
     @NotEmpty(message = "Name of user should not be empty")
@@ -36,4 +38,23 @@ public class User {
         return phoneBook;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (!name.equals(user.name)) return false;
+        return phoneBook.equals(user.phoneBook);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + phoneBook.hashCode();
+        return result;
+    }
 }

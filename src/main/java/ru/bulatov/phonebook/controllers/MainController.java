@@ -80,13 +80,13 @@ public class MainController {
     @PostMapping("/{id}/phonebook")
     public ResponseEntity<?> createContact(@PathVariable("id") int id,
                                            @RequestBody @Valid Contact contact) {
-        phoneBookService.addContact(userService.getUserById(id), contact);
+        phoneBookService.addContact(userService.read(id), contact);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/phonebook")
     public ResponseEntity<List<Contact>> readAllContacts(@PathVariable("id") int id) {
-        List<Contact> contacts = phoneBookService.getAllContacts(userService.getUserById(id));
+        List<Contact> contacts = phoneBookService.getAllContacts(userService.read(id));
 
         return contacts != null && !contacts.isEmpty()
                 ? new ResponseEntity<>(contacts, HttpStatus.OK)
@@ -96,7 +96,7 @@ public class MainController {
     @GetMapping("/{id}/phonebook/{contactId}")
     public ResponseEntity<Contact> readContact(@PathVariable("id") int id,
                                             @PathVariable("contactId") int contactId) {
-        Contact contact = phoneBookService.readContact(userService.getUserById(id), contactId);
+        Contact contact = phoneBookService.readContact(userService.read(id), contactId);
         return contact != null
                 ? new ResponseEntity<>(contact, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -107,7 +107,7 @@ public class MainController {
                                         @PathVariable("contactId") int contactId,
                                         @RequestBody @Valid Contact contact) {
         contact.setId(contactId);
-        boolean updated = phoneBookService.updateContact(userService.getUserById(id), contact);
+        boolean updated = phoneBookService.updateContact(userService.read(id), contact);
 
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -117,7 +117,7 @@ public class MainController {
     @DeleteMapping("/{id}/phonebook/{contactId}")
     public ResponseEntity<?> deleteContact(@PathVariable("id") int id,
                                            @PathVariable("contactId") int contactId) {
-        boolean deleted = phoneBookService.deleteContact(userService.getUserById(id), contactId);
+        boolean deleted = phoneBookService.deleteContact(userService.read(id), contactId);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

@@ -46,4 +46,21 @@ public class PhoneBook {
         return contacts.remove(contactId) != null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PhoneBook phoneBook = (PhoneBook) o;
+
+        if (CONTACTS_COUNT != phoneBook.CONTACTS_COUNT) return false;
+        return contacts.equals(phoneBook.contacts);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = contacts.hashCode();
+        result = 31 * result + CONTACTS_COUNT;
+        return result;
+    }
 }
