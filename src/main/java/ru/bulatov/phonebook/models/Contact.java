@@ -13,12 +13,12 @@ public class Contact {
 
     @NotEmpty(message = "Name of contact should not be empty")
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-Z][a-z]*(\\s(([a-z]{1,3})|(([a-z]+')?[A-Z][a-z]*)))*$",
+    @Pattern(regexp = "^[A-ZА-яё][a-zа-яё]*(\\s(([a-zа-яё]{1,3})|(([a-zа-яё]+')?[A-ZА-яё][a-zа-яё]*)))*$",
             message = "Bad formed person name: ${validatedValue}")
     private String name;
 
     @NotEmpty(message = "PhoneNumber should not be empty")
-    @Pattern(regexp = "^(\\s*)?(\\+)?([- _():=+]?\\d[- _():=+]?){10,14}(\\s*)?$",
+    @Pattern(regexp = "^(\\+)?(\\(\\d{2,3}\\) ?\\d|\\d)(([ \\-]?\\d)|( ?\\(\\d{2,3}\\) ?)){5,12}\\d$",
             message = "Bad formed phoneNumber: ${validatedValue}")
     private String phoneNumber;
 

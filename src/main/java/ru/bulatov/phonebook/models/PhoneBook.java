@@ -7,24 +7,24 @@ import java.util.Map;
 
 public class PhoneBook {
 
-    private final Map<Integer, Contact> contacts = new HashMap<>();
+    private final Map<Integer, Contact> CONTACTS = new HashMap<>();
     private int CONTACTS_COUNT;
 
     public List<Contact> getAllContacts() {
-        return new ArrayList<>(contacts.values());
+        return new ArrayList<>(CONTACTS.values());
     }
 
     public void addContact(Contact newContact) {
-        if (contacts.values().stream().noneMatch(contact -> contact.equals(newContact))) {
+        if (CONTACTS.values().stream().noneMatch(contact -> contact.equals(newContact))) {
             int contactId = ++CONTACTS_COUNT;
             newContact.setId(contactId);
-            contacts.put(contactId, newContact);
+            CONTACTS.put(contactId, newContact);
         }
     }
 
     public boolean updateContact(Contact updatedContact) {
-        if (contacts.containsKey(updatedContact.getId())) {
-            Contact contact = contacts.get(updatedContact.getId());
+        if (CONTACTS.containsKey(updatedContact.getId())) {
+            Contact contact = CONTACTS.get(updatedContact.getId());
             contact.setName(updatedContact.getName());
             contact.setPhoneNumber(updatedContact.getPhoneNumber());
             return true;
@@ -33,17 +33,17 @@ public class PhoneBook {
     }
 
     public Contact getContact(int id) {
-        return contacts.get(id);
+        return CONTACTS.get(id);
     }
 
     public Contact getContact(String phoneNumber){
-        return contacts.values().stream()
+        return CONTACTS.values().stream()
                 .filter(contact -> contact.getPhoneNumber().equals(phoneNumber))
                 .findAny().orElse(null);
     }
 
     public boolean deleteContact(int contactId) {
-        return contacts.remove(contactId) != null;
+        return CONTACTS.remove(contactId) != null;
     }
 
     @Override
@@ -54,12 +54,12 @@ public class PhoneBook {
         PhoneBook phoneBook = (PhoneBook) o;
 
         if (CONTACTS_COUNT != phoneBook.CONTACTS_COUNT) return false;
-        return contacts.equals(phoneBook.contacts);
+        return CONTACTS.equals(phoneBook.CONTACTS);
     }
 
     @Override
     public int hashCode() {
-        int result = contacts.hashCode();
+        int result = CONTACTS.hashCode();
         result = 31 * result + CONTACTS_COUNT;
         return result;
     }
