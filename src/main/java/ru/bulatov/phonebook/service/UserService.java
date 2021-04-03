@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class UserService {
 
-    private static final Map<Integer, User> USER_MAP = new HashMap<>();
+    private final Map<Integer, User> USER_MAP = new HashMap<>();
 
-    private static final AtomicInteger USER_ID_HOLDER = new AtomicInteger();
+    private final AtomicInteger USER_ID_HOLDER = new AtomicInteger();
 
     public void create(User user){
         int userId = USER_ID_HOLDER.incrementAndGet();
@@ -33,7 +33,8 @@ public class UserService {
     public boolean update(int id, User updatedUser) {
         if (USER_MAP.containsKey(id)) {
             User userToBeUpdated = USER_MAP.get(id);
-            userToBeUpdated.setName(updatedUser.getName());
+            String newName = updatedUser.getName();
+            userToBeUpdated.setName(newName);
             return true;
         }
         return  false;
