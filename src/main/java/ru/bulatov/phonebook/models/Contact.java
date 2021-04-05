@@ -13,7 +13,7 @@ public class Contact {
 
     @NotEmpty(message = "Name of contact should not be empty")
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-ZА-яё][a-zа-яё]*(\\s(([a-zа-яё]{1,3})|(([a-zа-яё]+')?[A-ZА-яё][a-zа-яё]*)))*$",
+    @Pattern(regexp = "^[A-ZА-Я][a-zа-яё]*(\\s(([a-zа-яё]{1,3})|(([a-zа-яё]+')?([A-ZА-Я][a-zа-яё]+-)?[A-ZА-Яё][a-zа-яё]*)))*$",
             message = "Bad formed person name: ${validatedValue}")
     private String name;
 
