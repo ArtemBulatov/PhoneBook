@@ -1,9 +1,6 @@
 package ru.bulatov.phonebook.models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PhoneBook {
 
@@ -37,9 +34,16 @@ public class PhoneBook {
     }
 
     public Contact getContact(String phoneNumber){
-        return CONTACTS.values().stream()
-                .filter(contact -> contact.getPhoneNumber().equals(phoneNumber))
-                .findAny().orElse(null);
+        Contact result = null;
+        String findPhoneNumber = phoneNumber.replaceAll("\\D", "");
+        for(Contact contact : CONTACTS.values()) {
+            String thisContactNumber = contact.getPhoneNumber().replaceAll("\\D", "");
+            if(findPhoneNumber.equals(thisContactNumber)){
+                result = contact;
+                break;
+            }
+        }
+        return result;
     }
 
     public boolean deleteContact(int contactId) {

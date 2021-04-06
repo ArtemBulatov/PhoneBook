@@ -60,9 +60,9 @@ class PhoneBookServiceTest {
 
     @Test
     void findContact() {
-        Assertions.assertEquals(contactList.get(0), phoneBookService.findContact(user, "+19327453539"));
-        Assertions.assertEquals(contactList.get(1), phoneBookService.findContact(user, "+69(872)347-85-27"));
-        Assertions.assertNotEquals(contactList.get(1), phoneBookService.findContact(user, "89823550733"));
+        Assertions.assertEquals(contactList.get(0), phoneBookService.findContact(user, "19327453539"));
+        Assertions.assertEquals(contactList.get(1), phoneBookService.findContact(user, "69(872)3478527"));
+        Assertions.assertNotEquals(contactList.get(1), phoneBookService.findContact(user, "8-982-355-07-33"));
     }
 
     @Test

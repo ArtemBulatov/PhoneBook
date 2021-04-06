@@ -68,9 +68,9 @@ public class MainController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @GetMapping("/find/{name}")
-    public ResponseEntity<User> findUser(@PathVariable("name") String name) {
-        User foundUser = userService.find(name);
+    @GetMapping("/find/{nameOrPartOfName}")
+    public ResponseEntity<User> findUser(@PathVariable("nameOrPartOfName") String nameOrPartOfName) {
+        User foundUser = userService.find(nameOrPartOfName);
 
         return foundUser != null
                 ? new ResponseEntity<>(foundUser, HttpStatus.OK)

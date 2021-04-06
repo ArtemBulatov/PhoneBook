@@ -54,7 +54,7 @@ class PhonebookApplicationTests {
         response = restTemplate.postForEntity("/users", user, User.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
-        user.setName("Henri d'Albret");
+        user.setName("Henri d'Albert");
         response = restTemplate.postForEntity("/users", user, User.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
@@ -174,12 +174,25 @@ class PhonebookApplicationTests {
 
     @Test
     void findUser() {
-        String name = "Bob";
         User user = new User();
-        user.setName(name);
+        user.setName("Николай Римский-Корсаков");
         userService.create(user);
         user.setId(1);
-        ResponseEntity<User> response = restTemplate.exchange("/users/find/{name}", HttpMethod.GET, null, User.class, name);
+
+        ResponseEntity<User> response = restTemplate.exchange("/users/find/{nameOrPartOfName}", HttpMethod.GET, null, User.class, "Николай Римский-Корсаков");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Assertions.assertEquals(user, response.getBody());
+
+        response = restTemplate.exchange("/users/find/{nameOrPartOfName}", HttpMethod.GET, null, User.class, "Николай");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Assertions.assertEquals(user, response.getBody());
+
+        response = restTemplate.exchange("/users/find/{nameOrPartOfName}", HttpMethod.GET, null, User.class, "Римский");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Assertions.assertEquals(user, response.getBody());
+
+
+        response = restTemplate.exchange("/users/find/{nameOrPartOfName}", HttpMethod.GET, null, User.class, "Корсаков");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         Assertions.assertEquals(user, response.getBody());
     }
@@ -198,7 +211,7 @@ class PhonebookApplicationTests {
         ResponseEntity<Contact> response = restTemplate.exchange("/users/{userId}/phonebook", HttpMethod.POST, entity, Contact.class, userId);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
-        contact.setName("Henri d'Albret");
+        contact.setName("Henri d'Albert");
         contact.setPhoneNumber("+7(999)2091053");
         entity = new HttpEntity<>(contact);
         response = restTemplate.exchange("/users/{userId}/phonebook", HttpMethod.POST, entity, Contact.class, userId);
@@ -237,7 +250,7 @@ class PhonebookApplicationTests {
         ResponseEntity<Contact> response = restTemplate.exchange("/users/{userId}/phonebook", HttpMethod.POST, entity, Contact.class, userId);
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 
-        contact.setName("Henri d'Albret");
+        contact.setName("Henri d'Albert");
         contact.setPhoneNumber("7+9992091053");
         entity = new HttpEntity<>(contact);
         response = restTemplate.exchange("/users/{userId}/phonebook", HttpMethod.POST, entity, Contact.class, userId);
@@ -406,8 +419,8 @@ class PhonebookApplicationTests {
         phoneBookService.addContact(userService.read(userId), contact2);
         contact1.setId(1);
         contact2.setId(2);
-        Contact nikolai = restTemplate.getForObject("/users/{userId}/phonebook/find/{phoneNumber}",Contact.class, userId, "8(999)209-10-53");
-        Contact marina = restTemplate.getForObject("/users/{userId}/phonebook/find/{phoneNumber}",Contact.class, userId, "(812)318-10-53");
+        Contact nikolai = restTemplate.getForObject("/users/{userId}/phonebook/find/{phoneNumber}",Contact.class, userId, "89992091053");
+        Contact marina = restTemplate.getForObject("/users/{userId}/phonebook/find/{phoneNumber}",Contact.class, userId, "8123181053");
         Assertions.assertEquals(contact1, nikolai);
         Assertions.assertEquals(contact2, marina);
     }
