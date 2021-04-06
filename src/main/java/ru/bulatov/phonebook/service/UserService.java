@@ -50,4 +50,8 @@ public class UserService {
                 .findAny().orElse(null);
     }
 
+    public void deleteAllUsers() {
+        USER_MAP.clear();
+    }
+
 }
