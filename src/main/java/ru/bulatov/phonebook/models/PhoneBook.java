@@ -1,70 +1,42 @@
 package ru.bulatov.phonebook.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.*;
-
+@Entity
+@Table(name = "phoneBook")
 public class PhoneBook {
 
-    private final Map<Integer, Contact> CONTACTS = new HashMap<>();
-    private int CONTACTS_COUNT;
+    @Column(name = "userId")
+    private int userId;
 
-    public List<Contact> getAllContacts() {
-        return new ArrayList<>(CONTACTS.values());
+    @Id
+    @Column(name = "contactId")
+    private int contactId;
+
+    public PhoneBook() {
     }
 
-    public void addContact(Contact newContact) {
-        if (CONTACTS.values().stream().noneMatch(contact -> contact.equals(newContact))) {
-            int contactId = ++CONTACTS_COUNT;
-            newContact.setId(contactId);
-            CONTACTS.put(contactId, newContact);
-        }
+    public PhoneBook(int userId, int contactId) {
+        this.userId = userId;
+        this.contactId = contactId;
     }
 
-    public boolean updateContact(Contact updatedContact) {
-        if (CONTACTS.containsKey(updatedContact.getId())) {
-            Contact contact = CONTACTS.get(updatedContact.getId());
-            contact.setName(updatedContact.getName());
-            contact.setPhoneNumber(updatedContact.getPhoneNumber());
-            return true;
-        }
-        else return false;
+    public int getUserId() {
+        return userId;
     }
 
-    public Contact getContact(int id) {
-        return CONTACTS.get(id);
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public Contact getContact(String phoneNumber){
-        Contact result = null;
-        String findPhoneNumber = phoneNumber.replaceAll("\\D", "");
-        for(Contact contact : CONTACTS.values()) {
-            String thisContactNumber = contact.getPhoneNumber().replaceAll("\\D", "");
-            if(findPhoneNumber.equals(thisContactNumber)){
-                result = contact;
-                break;
-            }
-        }
-        return result;
+    public int getContactId() {
+        return contactId;
     }
 
-    public boolean deleteContact(int contactId) {
-        return CONTACTS.remove(contactId) != null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PhoneBook phoneBook = (PhoneBook) o;
-
-        if (CONTACTS_COUNT != phoneBook.CONTACTS_COUNT) return false;
-        return CONTACTS.equals(phoneBook.CONTACTS);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = CONTACTS.hashCode();
-        result = 31 * result + CONTACTS_COUNT;
-        return result;
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
     }
 }

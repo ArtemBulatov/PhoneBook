@@ -1,12 +1,18 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id SERIAL  PRIMARY KEY,
-    name  VARCHAR(50) NOT NULL
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS contacts
 (
-    id SERIAL  PRIMARY KEY,
-    name  VARCHAR(50) NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
     phoneNumber VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS phoneBook
+(
+    userId INTEGER,
+    contactId INTEGER PRIMARY KEY
 );

@@ -1,52 +1,50 @@
 package ru.bulatov.phonebook.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bulatov.phonebook.models.User;
+import ru.bulatov.phonebook.repositories.UserRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class UserService {
 
-    private final Map<Integer, User> USER_MAP = new HashMap<>();
-
-    private final AtomicInteger USER_ID_HOLDER = new AtomicInteger();
+    @Autowired
+    private UserRepository userRepository;
 
     public void create(User user){
-        int userId = USER_ID_HOLDER.incrementAndGet();
-        user.setId(userId);
-        USER_MAP.put(userId, user);
+        userRepository.save(user);
     }
 
     public List<User> readAll() {
-        return new ArrayList<>(USER_MAP.values());
+        return userRepository.findAll();
     }
 
     public User read(int id) {
-        return USER_MAP.get(id);
+        return userRepository.getOne(id);
     }
 
     public boolean update(int id, User updatedUser) {
-        if (USER_MAP.containsKey(id)) {
-            User userToBeUpdated = USER_MAP.get(id);
-            String newName = updatedUser.getName();
-            userToBeUpdated.setName(newName);
+        if (userRepository.existsById(id)) {
+            updatedUser.setId(id);
+            userRepository.save(updatedUser);
             return true;
         }
         return  false;
     }
 
     public boolean delete(int id) {
-        return USER_MAP.remove(id) != null;
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return  false;
     }
 
     public User find(String nameOrPartOfName) {
         User foundUser = null;
-            for (User user: USER_MAP.values()){
+            for (User user: userRepository.findAll()){
                 if(user.getName().equals(nameOrPartOfName)) {
                     foundUser = user;
                 }
@@ -67,7 +65,7 @@ public class UserService {
     }
 
     public void deleteAllUsers() {
-        USER_MAP.clear();
+        userRepository.deleteAll();
     }
 
 }

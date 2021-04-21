@@ -1,22 +1,30 @@
 package ru.bulatov.phonebook.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User {
 
     @NotNull
+    @Id
+    @Column(name = "id")
     private int id;
 
     @NotEmpty(message = "Name of user should not be empty")
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
     @Pattern(regexp = "^[A-ZА-Я][a-zа-яё]*(\\s(([a-zа-яё]{1,3})|(([a-zа-яё]+')?([A-ZА-Я][a-zа-яё]+-)?[A-ZА-Яё][a-zа-яё]*)))*$",
             message = "Bad formed person name: ${validatedValue}")
+    @Column(name = "name")
     private String name;
-
-    private final PhoneBook phoneBook = new PhoneBook();
 
     public int getId() {
         return id;
@@ -34,10 +42,6 @@ public class User {
         this.name = name;
     }
 
-    public PhoneBook getPhoneBook() {
-        return phoneBook;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,15 +50,13 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (!name.equals(user.name)) return false;
-        return phoneBook.equals(user.phoneBook);
+        return Objects.equals(name, user.name);
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + phoneBook.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 }
