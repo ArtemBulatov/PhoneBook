@@ -3,7 +3,7 @@ package ru.bulatov.phonebook.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bulatov.phonebook.models.Contact;
-import ru.bulatov.phonebook.repositories.ContactRepository;
+import ru.bulatov.phonebook.repositories.ContactsRepository;
 
 import java.util.List;
 
@@ -11,32 +11,32 @@ import java.util.List;
 public class ContactService {
 
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactsRepository contactsRepository;
 
     public void create(Contact contact){
-        contactRepository.save(contact);
+        contactsRepository.save(contact);
     }
 
     public List<Contact> readAll() {
-        return contactRepository.findAll();
+        return contactsRepository.findAll();
     }
 
     public Contact read(int id) {
-        return contactRepository.getOne(id);
+        return contactsRepository.getOne(id);
     }
 
     public boolean update(int id, Contact updatedContact) {
-        if (contactRepository.existsById(id)) {
+        if (contactsRepository.existsById(id)) {
             updatedContact.setId(id);
-            contactRepository.save(updatedContact);
+            contactsRepository.save(updatedContact);
             return true;
         }
         return  false;
     }
 
     public boolean delete(int id) {
-        if (contactRepository.existsById(id)) {
-            contactRepository.deleteById(id);
+        if (contactsRepository.existsById(id)) {
+            contactsRepository.deleteById(id);
             return true;
         }
         return  false;
@@ -45,7 +45,7 @@ public class ContactService {
     public Contact find(String phoneNumber) {
         Contact result = null;
         String findPhoneNumber = phoneNumber.replaceAll("\\D", "");
-        for(Contact contact : contactRepository.findAll()) {
+        for(Contact contact : contactsRepository.findAll()) {
             String thisContactNumber = contact.getPhoneNumber().replaceAll("\\D", "");
             if(findPhoneNumber.equals(thisContactNumber)){
                 result = contact;
@@ -53,6 +53,10 @@ public class ContactService {
             }
         }
         return result;
+    }
+
+    public void deleteAllContacts() {
+        contactsRepository.deleteAll();
     }
 
 }

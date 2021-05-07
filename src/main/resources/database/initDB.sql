@@ -8,11 +8,7 @@ CREATE TABLE IF NOT EXISTS contacts
 (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    phoneNumber VARCHAR NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS phoneBook
-(
-    userId INTEGER,
-    contactId INTEGER PRIMARY KEY
+    phone_number VARCHAR NOT NULL,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

@@ -3,10 +3,7 @@ package ru.bulatov.phonebook.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bulatov.phonebook.models.Contact;
-import ru.bulatov.phonebook.models.PhoneBook;
 import ru.bulatov.phonebook.models.User;
-import ru.bulatov.phonebook.repositories.ContactRepository;
-import ru.bulatov.phonebook.repositories.PhoneBookRepository;
 
 import java.util.List;
 
@@ -14,33 +11,48 @@ import java.util.List;
 public class PhoneBookService {
 
     @Autowired
-    private PhoneBookRepository phoneBookRepository;
-    @Autowired
     private ContactService contactService;
 
     public void addContact(User user, Contact contact){
+        contact.setUserId(user.getId());
         contactService.create(contact);
-        phoneBookRepository.save(new PhoneBook(user.getId(), contactService.find(contact.getPhoneNumber()).getId()));
     }
 
     public Contact readContact(User user, int contactId) {
-        return phoneBookRepository.getOne(contactId));
+        Contact foundContact = null;
+        if(contactService.read(contactId).getUserId() == user.getId()){
+            foundContact = contactService.read(contactId);
+        }
+        return foundContact;
     }
 
     public Contact findContact(User user, String phoneNumber){
-        return user.getPhoneBook().getContact(phoneNumber);
+        Contact foundContact = null;
+        Contact contact = contactService.find(phoneNumber);
+        if (contact.getUserId() == user.getId()){
+            foundContact = contact;
+        }
+        return foundContact;
     }
 
     public List<Contact> getAllContacts(User user){
-        return user.getPhoneBook().getAllContacts();
+        return user.getContacts();
     }
 
     public boolean updateContact(User user, Contact contact){
-        return  user.getPhoneBook().updateContact(contact);
+        return contactService.update(user.getId(), contact);
     }
 
     public boolean deleteContact(User user, int contactId) {
-        return user.getPhoneBook().deleteContact(contactId);
+        if(user.getContacts().contains(contactService.read(contactId))) {
+            return contactService.delete(contactId);
+        }
+        else
+            return false;
+    }
+
+    public void cleanPhoneBook(){
+        contactService.deleteAllContacts();
     }
 
 }

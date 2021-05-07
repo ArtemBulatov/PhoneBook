@@ -3,7 +3,7 @@ package ru.bulatov.phonebook.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bulatov.phonebook.models.User;
-import ru.bulatov.phonebook.repositories.UserRepository;
+import ru.bulatov.phonebook.repositories.UsersRepository;
 
 import java.util.List;
 
@@ -11,32 +11,32 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     public void create(User user){
-        userRepository.save(user);
+        usersRepository.save(user);
     }
 
     public List<User> readAll() {
-        return userRepository.findAll();
+        return usersRepository.findAll();
     }
 
     public User read(int id) {
-        return userRepository.getOne(id);
+        return usersRepository.getOne(id);
     }
 
     public boolean update(int id, User updatedUser) {
-        if (userRepository.existsById(id)) {
+        if (usersRepository.existsById(id)) {
             updatedUser.setId(id);
-            userRepository.save(updatedUser);
+            usersRepository.save(updatedUser);
             return true;
         }
         return  false;
     }
 
     public boolean delete(int id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
+        if (usersRepository.existsById(id)) {
+            usersRepository.deleteById(id);
             return true;
         }
         return  false;
@@ -44,7 +44,7 @@ public class UserService {
 
     public User find(String nameOrPartOfName) {
         User foundUser = null;
-            for (User user: userRepository.findAll()){
+            for (User user: usersRepository.findAll()){
                 if(user.getName().equals(nameOrPartOfName)) {
                     foundUser = user;
                 }
@@ -65,7 +65,7 @@ public class UserService {
     }
 
     public void deleteAllUsers() {
-        userRepository.deleteAll();
+        usersRepository.deleteAll();
     }
 
 }
